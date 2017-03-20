@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import Clock from './Clock';
+import Stopwatch from './Stopwatch'
 import './App.css';
+import { Form, FormControl, Button } from 'react-bootstrap';
 
 class App extends Component {
 	constructor (props) {
@@ -7,12 +10,23 @@ class App extends Component {
 
 		this.state = {
 			deadline: 'July 15, 2017',
-			newDeadline: ''
+			newDeadline: '',
+			time: 0,
+			newTime: ''
 		}
 	}
 
 	changeDeadline () {
-		this.setState({deadline: 'November 15, 2017'})
+		this.setState({deadline: this.state.newDeadline});
+	}
+
+	changeTime () {
+		this.setState({time: this.state.newTime});
+	}
+
+	resetTime () {
+		this.setState({newTime: 0});
+		this.setState({time: this.state.newTime});
 	}
 
 	render() {
@@ -22,17 +36,29 @@ class App extends Component {
 					Countdown to {this.state.deadline}
 				</div>
 				<div>
-					<div className="Clock-days">14 Days</div>
-					<div className="Clock-hours">30 Hours</div>
-					<div className="Clock-minutes">15 Minutes</div>
-					<div className="Clock-seconds">20 Seconds</div>
+					<Clock deadline={this.state.deadline}/>
+				</div>
+				<Form inline>
+					<FormControl
+						className="Deadline-input"
+						onChange={event => this.setState({newDeadline: event.target.value})}
+						placeholder='new date'/>
+					<Button onClick={() => this.changeDeadline()}>Submit</Button>
+				</Form>
+				<div className="App-title">
+					Stopwatch
 				</div>
 				<div>
-					<input 
-						onChange={event => console.log('event', event)}
-						placeholder='new date'/>
-					<button onClick={() => this.changeDeadline()}>Submit</button>
+					<Stopwatch time={this.state.time}/>
 				</div>
+				<Form inline>
+					<FormControl
+						className="Stopwatch-input"
+						onChange={event => this.setState({newTime: event.target.value * 1000 + Date.parse(new Date())})}
+						placeholder='new time in seconds'/>
+					<Button onClick={() => this.changeTime()}>Submit</Button>
+					<Button onClick={() => this.resetTime()}>Reset</Button>
+				</Form>
 			</div>
 		)
 	}
